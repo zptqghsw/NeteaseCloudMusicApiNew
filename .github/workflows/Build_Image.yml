@@ -1,6 +1,7 @@
 name: Build Image
 
 on:
+  workflow_dispatch:
   push:
       tags:
           - v*
@@ -16,15 +17,15 @@ jobs:
             uses: actions/checkout@v3
           - name: Get version
             id: get_version
-            if: startsWith(github.ref, 'refs/tags/') && startsWith(github.repository, 'Binaryify/ncm')
-            run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
+            if: startsWith(github.ref, 'refs/tags/') && startsWith(github.repository, 'zptqghsw/NeteaseCloudMusicApiNew')
+            run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
           - name: Set up Docker Buildx
             uses: docker/setup-buildx-action@v2
           - name: Build and publish image
             uses: elgohr/Publish-Docker-Github-Action@v5
-            if: startsWith(github.ref, 'refs/tags/') && startsWith(github.repository, 'Binaryify/ncm')
+            if: startsWith(github.ref, 'refs/tags/') && startsWith(github.repository, 'zptqghsw/NeteaseCloudMusicApiNew')
             with:
-              name: binaryify/netease_cloud_music_api # dockerid/imageName
+              name: zptqghsw/netease_cloud_music_api # dockerid/imageName
               platforms: linux/arm64,linux/amd64 # 你准备构建的镜像平台
               tags: latest,${{ steps.get_version.outputs.VERSION }}
               username: ${{ secrets.DOCKER_USERNAME }} # docker hub userid 在setting创建secrets name=DOCKER_USERNAME  value=dockerid
